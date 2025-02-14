@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Questions</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.querySelector('form');
+            form.addEventListener('submit', (event) => {
+                let allAnswered = true;
+
+                // Check if all text inputs, radio buttons, and textareas are filled
+                form.querySelectorAll('input[type="text"], input[type="radio"], textarea').forEach((input) => {
+                    if (input.type === 'radio') {
+                        const name = input.name;
+                        if (!form.querySelector(`input[name="${name}"]:checked`)) {
+                            allAnswered = false;
+                        }
+                    } else if (!input.value.trim()) {
+                        allAnswered = false;
+                    }
+                });
+
+                if (!allAnswered) {
+                    event.preventDefault();  // Prevent form submission
+                    alert('Please answer all questions before submitting.');
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1 class="heading">Questions</h1>
+        <form method="POST" action="{{ url_for('questions', candidate_key=candidate_key) }}">
+            <!-- Normal Questions -->
+            <h2>Normal Questions</h2>
+            {% for question in questions['normal'] %}
+                <input type="hidden" name="question_ids[]" value="{{ question[0] }}">
+                <input type="hidden" name="question_types[]" value="normal">
+                <div class="question">
+                    <p>{{ question[1] }}</p>
+                    <input type="text" name="answers[]" placeholder="Your answer">
+                </div>
+            {% endfor %}
+
+            <!-- MCQ Questions -->
+            <h2>MCQ Questions</h2>
+            {% for question in questions['mcq'] %}
+                <input type="hidden" name="question_ids[]" value="{{ question[0] }}">
+                <input type="hidden" name="question_types[]" value="mcq">
+                <div class="question">
+                    <p>{{ question[1] }}</p>
+                    <input type="radio" name="answers[{{ loop.index0 }}]" value="1"> {{ question[2] }}<br>
+                    <input type="radio" name="answers[{{ loop.index0 }}]" value="2"> {{ question[3] }}<br>
+                    <input type="radio" name="answers[{{ loop.index0 }}]" value="3"> {{ question[4] }}<br>
+                    <input type="radio" name="answers[{{ loop.index0 }}]" value="4"> {{ question[5] }}<br>
+                </div>
+            {% endfor %}
+
+            <!-- Code Questions -->
+            <h2>Code Questions</h2>
+            {% for question in questions['code'] %}
+                <input type="hidden" name="question_ids[]" value="{{ question[0] }}">
+                <input type="hidden" name="question_types[]" value="code">
+                <div class="question">
+                    <p>{{ question[1] }}</p>
+                    <textarea name="answers[]" placeholder="Your code here"></textarea>
+                </div>
+            {% endfor %}
+
+            <!-- Submit Button -->
+            <button type="submit" class="button">Finish Test</button>
+        </form>
+    </div>
+</body>
+</html>
+

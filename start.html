@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Start Test</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1 class="heading">START TEST</h1>
+        <form method="POST">
+            <label for="candidate_key">Enter Candidate Key:</label>
+            <input type="text" id="candidate_key" name="candidate_key" required>
+            <button type="submit" class="button">Start Test</button>
+        </form>
+    </div>
+</body>
+</html>
